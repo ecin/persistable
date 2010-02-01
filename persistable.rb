@@ -69,6 +69,7 @@ module Persistable
 
   def self.included(klass)
     klass.extend ClassMethods
+    super
   end
 
 end
