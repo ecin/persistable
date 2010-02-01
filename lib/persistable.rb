@@ -28,6 +28,7 @@ module Persistable
           maglev_persistable
           Maglev::PERSISTENT_ROOT[self] ||= Set.new 
         else
+          warn "Objects will not be persitent, as this is not Maglev."
           Set.new
         end
       end
