@@ -1,3 +1,5 @@
+require 'set'
+
 module Persistable
 
   # A store should be able to, uh, store objects. Also:
@@ -6,8 +8,6 @@ module Persistable
   # - should not accept duplicates
   # - should be Set
   # Ok, so that last one isn't a requirement. Gosh darned, it's the solution!
-
-  require 'set'
   
   def self.included(klass)
     klass.class_eval do
