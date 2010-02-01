@@ -32,10 +32,6 @@ module Persistable
       end
     end
 
-    def each(&block)
-      store.each(&block)
-    end
-
     def_delegators :store, :classify, :clear, :delete, :delete?, :delete_if, :each, :empty?, :include?, :size, :to_a
 
     # Not #length or #size since #count seems closer to the search domain
