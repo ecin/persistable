@@ -48,7 +48,7 @@ module Persistable
   
   # Store the instance in the Set
   def persist
-    self.class.store.add?(self) ? true: false
+    !!self.class.store.add?(self)
   end
 
   # Remove the instance from the Set (it's being a bad actor or something)
