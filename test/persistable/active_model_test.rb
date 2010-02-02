@@ -1,9 +1,11 @@
 #!/usr/bin/env maglev-ruby -rubygems
-require File.expand_path("../../test_helper", __FILE__)
+require "#{__FILE__}/../../test_helper"
+require "#{__FILE__}/../../active_model_lint"
 require "persistable/active_model"
 
 module Persistable
   class ActiveModelTest < Test::Unit::TestCase
+    include ::ActiveModel::Lint::Tests
 
     class ::Railsy
       include Persistable::ActiveModel
@@ -15,6 +17,8 @@ module Persistable
       @foo = Railsy.new :name => "foo", :value => 42
       @bar = Railsy.new :name => "bar", :value => 23
       @lousy_examples = [@foo, @bar]
+      # for ActiveModel::Lint::Tests
+      @model = @foo
     end
 
     def save_all
