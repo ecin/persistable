@@ -66,4 +66,14 @@ class PersistableTest < Test::Unit::TestCase
     assert @chunky_bacon.transient?
   end
   
+  # Tests to check only when riding on Maglev
+  if defined? Maglev
+    
+    def test_class_is_flagged_as_persistable
+      assert Bacon.maglev_persistable?
+      assert Set.maglev_persistable?
+    end
+    
+  end
+  
 end

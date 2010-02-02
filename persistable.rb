@@ -1,6 +1,8 @@
 require 'set'
 require 'forwardable'
 
+Set.maglev_persistable if defined? Maglev
+
 module Persistable
 
   # A store should be able to, uh, store objects. Also:
