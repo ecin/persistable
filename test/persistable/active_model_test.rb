@@ -1,12 +1,12 @@
 #!/usr/bin/env maglev-ruby -rubygems
 require File.expand_path("../../test_helper", __FILE__)
-require "persistable/active_record"
+require "persistable/active_model"
 
 module Persistable
-  class ActiveRecordTest < Test::Unit::TestCase
+  class ActiveModelTest < Test::Unit::TestCase
 
     class ::Railsy
-      include Persistable::ActiveRecord
+      include Persistable::ActiveModel
       attr_accessor :name, :value
       alias to_param name
     end
@@ -37,7 +37,7 @@ module Persistable
 
     def test_passed_hash_args_become_method_calles
       some_class = Class.new do
-        include Persistable::ActiveRecord
+        include Persistable::ActiveModel
         attr_reader :foo
         def bar=(value)
           @foo = value + 10

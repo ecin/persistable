@@ -1,8 +1,7 @@
 require "persistable"
 
 module Persistable
-  # Imitates ActiveRecord::Base
-  module ActiveRecord
+  module ActiveModel
     module ClassMethods
       def to_param
         raise NotImplementedError, "please implement in subclass"
