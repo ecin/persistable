@@ -6,6 +6,7 @@ Set.maglev_persistable if defined? Maglev
 module Persistable
 
   # A store should be able to, uh, store objects. Also:
+  # - should provide an insertion mechanism
   # - should provide a deletion mechanism
   # - should provide a querying mechanism
   # - should not accept duplicates
@@ -24,8 +25,6 @@ module Persistable
         # provide persistence then.
         if defined? Maglev
           # Flag the class as persistable by Maglev
-          # The documentation mentions #maglev_persistable=(true)
-          # The documentation is also wrong
           maglev_persistable
           Maglev::PERSISTENT_ROOT[self] ||= Set.new 
         else
@@ -34,10 +33,11 @@ module Persistable
       end
     end
 
+    # Give access to SOME of @store's instance methods.
+    # May want to expand this list at some point.
+    # Most of the remaining useful ones are shared with Array, so they can be used
+    # after calling #to_a first.
     def_delegators :store, :classify, :clear, :delete, :delete?, :delete_if, :each, :empty?, :include?, :size, :to_a
-
-    # Not #length or #size since #count seems closer to the search domain
-    alias count size
 
     # WARNING: objects stored in the set are not stored in order
     # We can get around that by #sort-ing on a timestamp attribute, 
@@ -65,6 +65,7 @@ module Persistable
     not persistent?
   end
 
+  # Be sure to call super afterwards to allow for other hooks
   def self.included(klass)
     klass.extend ClassMethods
     super
