@@ -1,4 +1,11 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift "#{__FILE__}/../../lib"
 
 require 'persistable'
-require 'test/unit'
+
+if Maglev::VERSION.to_i > 22804
+  require 'test/unit'
+else
+  require 'minitest/unit'
+  MiniTest::Unit.autorun
+  Test = MiniTest
+end

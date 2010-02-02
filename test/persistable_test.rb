@@ -1,5 +1,5 @@
 #!/usr/bin/env maglev-ruby -rubygems
-require File.expand_path("../test_helper", __FILE__)
+require "#{__FILE__}/../test_helper"
 
 class PersistableTest < Test::Unit::TestCase
   
