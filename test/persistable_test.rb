@@ -1,11 +1,9 @@
 #!/usr/bin/env maglev-ruby -rubygems
 
 require '../persistable'
-require 'minitest/unit'
+require 'test/unit'
 
-MiniTest::Unit.autorun
-
-class PersistableTest < MiniTest::Unit::TestCase
+class PersistableTest < Test::Unit::TestCase
   
   class ::Bacon < Struct.new(:type); include Persistable end
   
