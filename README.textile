@@ -1,0 +1,76 @@
+h2. Persistence in a module
+
+  p. Maglev is an alternative Ruby implementation written on top of a Smalltalk VM with an interesting persistence model:
+
+    * take an object
+    * reference it in a global (magic) hash
+    * commit!
+
+  p. ... after which point the object is stored in a repository for easy access by other Ruby sessions. This provides a very simple mechanism for saving objects, but leaves us with the job of implementing a nice interface to handle the querying and deletion. This is an attempt at solving that problem, encapsulated in a module for use with vanilla Ruby classes. 
+
+p.
+
+h2. Example
+
+bq.. require 'persistable'
+
+  class Book < Struct.new(:title, :author)
+    include Persistable
+  
+    attr_accessor :read
+    alias read? read
+
+    def to_s
+      title + ' by ' + author
+    end
+  end
+  
+
+  book = Book.new("Satan, Cantor, and Infinity", "Raymond Smullyan")
+  book.persist
+  # => true
+
+  Book.new("Surely You're Joking, Mr. Feynman!", "Richard P. Feynman").persist # => true
+  Book.new("Green Eggs and Ham", "Dr. Seuss").persist # => true
+  Book.new("Cat in the Hat", "Dr. Seuss").persist # => true 
+
+  # Instances _aren't_ stored in order, as you can see.
+  # Just keep that in mind. ;)
+  Book.each {|book| puts book}
+  # => Satan, Cantor, and Infinity by Raymond Smullyan
+  # => Surely You're Joking, Mr. Feynman! by Richard P. Feynman
+
+  Book.count
+  # => 4
+
+  Book.all
+  # => [#<struct Book title="Surely You're Joking, Mr. Feynman!", author="Richard P. Feynman">, 
+        #<struct Book title="Cat in the Hat", author="Dr. Seuss">, 
+        #<struct Book title="Green Eggs and Ham", author="Dr. Seuss">, 
+        #<struct Book title="Satan, Cantor, and Infinity", author="Raymond Smullyan">]
+
+  # Easily transverse through all our stored books
+  Book.each {|book| puts book if book.author[/Seuss/]}
+  # => Cat in the Hat by Dr. Seuss
+  # => Green Eggs and Ham by Dr. Seuss
+
+  # Wonder which Dr. Seuss books I have in my collection
+  Book.select {|book| !book.author[/Seuss/]}
+  # => [#<struct Book title="Surely You're Joking, Mr. Feynman!", author="Richard P. Feynman">, 
+        #<struct Book title="Satan, Cantor, and Infinity", author="Raymond Smullyan">] 
+
+  # Delete books with a short title
+  Book.delete_if {|book| book.title.length < 15}
+  # => #<Set: {#<struct Book title="Surely You're Joking, Mr. Feynman!", author="Richard P. Feynman">, 
+               #<struct Book title="Green Eggs and Ham", author="Dr. Seuss">, 
+               #<struct Book title="Satan, Cantor, and Infinity", author="Raymond Smullyan">}>
+
+  
+  book.persistent? # => true
+  
+  # Let's take out our book from the collection
+  book.desist
+  book.persistent? # => false
+  book.transient?  # => true
+
+
