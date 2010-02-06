@@ -38,7 +38,7 @@ module Persistable
     # May want to expand this list at some point.
     # Most of the remaining useful ones are shared with Array, so they can be used
     # after calling #to_a first.
-    def_delegators :store, :classify, :clear, :delete, :delete?, :delete_if, :each, :empty?, :include?, :size, :to_a
+    def_delegators :store, :classify, :clear, :delete, :delete?, :delete_if, :each, :empty?, :size, :to_a
 
     # WARNING: objects stored in the set are not stored in order
     # We can get around that by #sort-ing on a timestamp attribute, 
@@ -68,7 +68,20 @@ module Persistable
 
   # Be sure to call super afterwards to allow for other hooks
   def self.included(klass)
+    klass.class_eval do
+      class << self
+        alias original_include? include?
+      end
+    end
     klass.extend ClassMethods
+    klass.instance_eval do
+      # We don't want to overwrite Module#include?, 
+      # so only delegate #include if the argument 
+      # isn't a Module.
+      def include?(arg)
+        arg.is_a?(Module) ? original_include?(arg) : store.include?(arg)
+      end
+    end
     super
   end
 

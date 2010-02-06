@@ -1,5 +1,5 @@
 #!/usr/bin/env maglev-ruby -rubygems
-require "#{__FILE__}/../test_helper"
+require "test_helper"
 
 class PersistableTest < Test::Unit::TestCase
   
@@ -62,6 +62,16 @@ class PersistableTest < Test::Unit::TestCase
   def test_instances_can_be_desisted
     @chunky_bacon.desist
     assert @chunky_bacon.transient?
+  end
+  
+  # Module#include? shouldn't be forwarded when
+  # argument.class == Module
+  def test_module_include_still_works
+    @soggy_bacon.persist
+    assert Bacon.include? @soggy_bacon
+    # When passed a module, Bacon.include? checks if 
+    # the module is in its ancestry
+    assert Bacon.include? Persistable
   end
   
   # Tests to check only when riding on Maglev
