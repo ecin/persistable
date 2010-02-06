@@ -1,8 +1,8 @@
-$LOAD_PATH.unshift "#{__FILE__}/../../lib"
+$LOAD_PATH.unshift "../lib"
 
 require 'persistable'
 
-if Maglev::VERSION.to_i > 22804
+if !defined?(Maglev) or Maglev::VERSION.to_i > 22804
   require 'test/unit'
 else
   require 'minitest/unit'
