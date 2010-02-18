@@ -24,8 +24,6 @@ module Persistable
         # The code should at least run on standard MRI, even if it doesn't really
         # provide persistence then.
         if defined? Maglev
-          # Flag the class as persistable by Maglev
-          maglev_persistable
           Maglev::PERSISTENT_ROOT[self] ||= Set.new 
         else
           warn "Objects will not be persitent, as this is not Maglev."
@@ -69,6 +67,8 @@ module Persistable
   # Be sure to call super afterwards to allow for other hooks
   def self.included(klass)
     klass.class_eval do
+      # Flag the class as persistable by Maglev
+      self.maglev_persistable
       class << self
         alias original_include? include?
       end

@@ -1,7 +1,17 @@
 #!/usr/bin/env maglev-ruby -rubygems
 require "test_helper"
 
-class PersistableTest < Test::Unit::TestCase
+class PersistableWithoutInstancesTest < Test::Unit::TestCase
+  
+  class ::Egg; include Persistable end
+  
+  def test_class_should_be_flagged_as_persistable
+    assert Egg.maglev_persistable?
+  end
+  
+end
+
+class PersistableWithInstancesTest < Test::Unit::TestCase
   
   class ::Bacon < Struct.new(:type); include Persistable end
   
