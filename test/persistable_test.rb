@@ -30,6 +30,10 @@ class PersistableWithInstancesTest < Test::Unit::TestCase
     Bacon.delete_all
   end
   
+  def test_persistable_module_is_persistent
+    assert Persistable.maglev_persistable?
+  end
+  
   def test_class_store_starts_empty
     assert Bacon.all.empty?
   end

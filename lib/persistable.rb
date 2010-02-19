@@ -4,6 +4,9 @@ require 'forwardable'
 Set.maglev_persistable if defined? Maglev
 
 module Persistable
+  
+  # The Persistable module itself should be flagged as persistable
+  self.class_eval { maglev_persistable }
 
   # A store should be able to, uh, store objects. Also:
   # - should provide an insertion mechanism
