@@ -21,6 +21,18 @@ module Persistable
       def create(options  = {})
         new(options).tap { |r| r.save }
       end
+      
+      def model_name
+        potential_name = name if self.respond_to? :name
+        potential_name ||= to_s
+        class << potential_name
+          %w[human partial_path singular plural].each do |meth|
+            next if self.respond_to? meth
+            define_method(meth) { self }
+          end
+        end
+        potential_name
+      end
 
       alias create! create
 
@@ -70,18 +82,6 @@ module Persistable
         end
         errors
       end
-    end
-    
-    def model_name
-      potential_name = name if self.respond_to? :name
-      potential_name ||= to_s
-      class << potential_name
-        %w[human partial_path singular plural].each do |meth|
-          next if potential_name.respond_to? meth
-          define_method(meth) { self }
-        end
-      end
-      potential_name
     end
 
     def self.included(klass)
